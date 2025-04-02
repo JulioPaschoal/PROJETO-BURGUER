@@ -12,7 +12,7 @@ class UserController {
       email: Yup.string()
         .email('Insira um e-mail valido!')
         .required('O campo e-mail é obrigatório!'),
-      password_hash: Yup.string()
+      password: Yup.string()
         .min(6, 'A senha deve conter no mínimo 6 dígitos!')
         .required('Ocampo senha é obrigatória!'),
       admin: Yup.boolean(),
@@ -22,7 +22,7 @@ class UserController {
     } catch (error) {
       return res.status(400).json({ error: error.errors });
     }
-    const { name, email, password_hash, admin } = req.body;
+    const { name, email, password, admin } = req.body;
     const userExists = await User.findOne({ where: { email } });
     if (userExists) {
       return res.status(400).json({ error: 'O usuário já existe no sistema!' });
@@ -31,7 +31,7 @@ class UserController {
       id: v4(),
       name,
       email,
-      password_hash,
+      password,
       admin,
     });
     return res.status(201).json({
