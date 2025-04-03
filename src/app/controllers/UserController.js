@@ -14,7 +14,7 @@ class UserController {
         .required('O campo e-mail é obrigatório!'),
       password: Yup.string()
         .min(6, 'A senha deve conter no mínimo 6 dígitos!')
-        .required('Ocampo senha é obrigatória!'),
+        .required('O campo senha é obrigatória!'),
       admin: Yup.boolean(),
     });
     try {
