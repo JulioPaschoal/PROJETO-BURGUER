@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import User from '../models/User';
+import jwt from 'jsonwebtoken';
 
 class SessionController {
   async store(req, res) {
@@ -25,9 +26,15 @@ class SessionController {
     if (!isSamePassword) {
       emailOrPasswordIncorrect();
     }
-    return res
-      .status(201)
-      .json({ id: user.id, name: user.name, email, admin: user.admin });
+    return res.status(201).json({
+      id: user.id,
+      name: user.name,
+      email,
+      admin: user.admin,
+      token: jwt.sign({ id: user.id }, process.env.APP_SECRET, {
+        expiresIn: process.env.APP_EXPIRES,
+      }),
+    });
   }
 }
 
