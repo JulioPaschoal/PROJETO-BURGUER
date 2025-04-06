@@ -31,9 +31,13 @@ class SessionController {
       name: user.name,
       email,
       admin: user.admin,
-      token: jwt.sign({ id: user.id }, process.env.APP_SECRET, {
-        expiresIn: process.env.APP_EXPIRES,
-      }),
+      token: jwt.sign(
+        { id: user.id, name: user.name },
+        process.env.APP_SECRET,
+        {
+          expiresIn: process.env.APP_EXPIRES,
+        },
+      ),
     });
   }
 }

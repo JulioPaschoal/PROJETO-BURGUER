@@ -1,15 +1,16 @@
 import mongoose from 'mongoose';
-import { type } from '../../../node_modules/@types/whatwg-url/index.d';
 
-const OrderSchema = new mongoose.Schema({
-  user: {
-    id: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
+const OrderSchema = new mongoose.Schema(
+  {
+    user: {
+      id: {
+        type: String,
+        required: true,
+      },
+      name: {
+        type: String,
+        required: true,
+      },
     },
     products: [
       {
@@ -25,7 +26,6 @@ const OrderSchema = new mongoose.Schema({
           type: Number,
           required: true,
         },
-
         category: {
           type: String,
           required: true,
@@ -45,7 +45,9 @@ const OrderSchema = new mongoose.Schema({
       required: true,
     },
   },
-  timestamps: true,
-});
+  {
+    timestamps: true,
+  },
+);
 
 export default mongoose.model('Order', OrderSchema);
