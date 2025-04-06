@@ -13,6 +13,10 @@ class CategoryController {
       return res.status(400).json({ error: error.errors });
     }
     const { name } = req.body;
+    const categoryExists = await Category.findOne({ where: { name } });
+    if (categoryExists) {
+      return res.status(400).json({ error: 'Categoria já existe!' });
+    }
     const category = await Category.create({
       id: v4(),
       name,

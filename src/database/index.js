@@ -1,5 +1,7 @@
 import Sequelize from 'sequelize';
+
 import configDatabase from '../config/database';
+
 import User from '../app/models/User';
 import Product from '../app/models/Product';
 import Category from '../app/models/Category';
@@ -13,7 +15,13 @@ class Database {
 
   init() {
     this.connection = new Sequelize(configDatabase);
-    models.map((models) => models.init(this.connection));
+    models
+      .map((models) => models.init(this.connection))
+      // AVISANDO QUE O MODEL TEM RELACIONAMENTO \\
+      .map(
+        (models) =>
+          models.associate && models.associate(this.connection.models),
+      );
   }
 }
 
