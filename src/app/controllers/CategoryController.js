@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { v4 } from 'uuid';
 import Category from '../models/Category';
+import User from '../models/User';
 
 class CategoryController {
   async store(req, res) {
@@ -12,6 +13,12 @@ class CategoryController {
     } catch (error) {
       return res.status(400).json({ error: error.errors });
     }
+
+    const { admin: isAdmin } = await User.findByPk(req.userId);
+    if (!isAdmin) {
+      return res.status(401).json({ error: 'Acesso negado!' });
+    }
+
     const { name } = req.body;
     const categoryExists = await Category.findOne({ where: { name } });
     if (categoryExists) {

@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import { v4 } from 'uuid';
 import Product from '../models/Product';
 import Category from '../models/Category';
+import User from '../models/User';
 
 class ProductController {
   async store(req, res) {
@@ -14,6 +15,11 @@ class ProductController {
       schema.validateSync(req.body, { abortEarly: false });
     } catch (error) {
       return res.status(400).json({ error: error.errors });
+    }
+
+    const { admin: isAdmin } = await User.findByPk(req.userId);
+    if (!isAdmin) {
+      return res.status(401).json({ error: 'Acesso negado!' });
     }
     const { filename: path } = req.file;
     const { name, price, category_id } = req.body;

@@ -13,12 +13,16 @@ const upload = multer(multerConfig);
 
 routes.post('/users', UserController.store);
 routes.post('/session', SessionController.store);
+
 routes.use(authMiddleware);
 routes.post('/products', upload.single('file'), ProductController.store);
 routes.get('/products', ProductController.index);
+//routes.get('/products/:id', ProductController.update);
 
 routes.post('/category', CategoryController.store);
 routes.get('/category', CategoryController.index);
+//routes.get('/category/:id', CategoryController.update);
+
 routes.post('/orders', OrderController.store);
 routes.get('/orders', OrderController.index);
 routes.put('/orders/:id', OrderController.update);
