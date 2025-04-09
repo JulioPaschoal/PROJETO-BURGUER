@@ -19,9 +19,9 @@ routes.post('/products', upload.single('file'), ProductController.store);
 routes.get('/products', ProductController.index);
 routes.put('/products/:id', upload.single('file'), ProductController.update);
 
-routes.post('/category', CategoryController.store);
+routes.post('/category', upload.single('file'), CategoryController.store);
 routes.get('/category', CategoryController.index);
-//routes.get('/category/:id', CategoryController.update);
+routes.put('/category/:id', upload.single('file'), CategoryController.update);
 
 routes.post('/orders', OrderController.store);
 routes.get('/orders', OrderController.index);
