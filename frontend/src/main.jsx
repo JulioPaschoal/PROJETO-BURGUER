@@ -1,11 +1,12 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { Login } from './containers/login/index.jsx';
-import GlobalStyle from './styles/globalStyles.js';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <GlobalStyle />
+import Login from './containers/Login';
+import GlobalStyles from './styles/globalStyles';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <GlobalStyles />
     <Login />
-  </StrictMode>,
+  </React.StrictMode>,
 );
