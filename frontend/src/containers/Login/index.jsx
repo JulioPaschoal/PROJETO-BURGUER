@@ -1,3 +1,8 @@
+import { useForm } from 'react-hook-form';
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
 import Logo from '../../assets/logo-2.svg';
 import { Button } from '../../components/Button';
 import {
@@ -10,6 +15,28 @@ import {
 } from './styles';
 
 export default function Login() {
+  const schema = yup
+    .object({
+      email: yup
+        .string()
+        .email('Email ou senha inválidos')
+        .required('Campo obrigatório'),
+      password: yup
+        .string()
+        .min(6, 'A senha deve conter no mínimo 6 dígitos')
+        .required('Campo obrigatório'),
+    })
+    .required();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+  const onSubmit = (data) => console.log(data);
+
   return (
     <Container>
       <LeftContainer>
@@ -21,18 +48,26 @@ export default function Login() {
           <br />
           Acesse com seu <span>Login e senha</span>
         </Title>
-        <Form>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <InputContainer>
             <label>Email</label>
-            <input type="email" placeholder="Digite seu email" />
+            <input
+              type="email"
+              {...register('email')}
+              placeholder="Digite seu email"
+            />
           </InputContainer>
 
           <InputContainer>
             <label>Senha</label>
-            <input type="password" placeholder="Digite sua senha" />
+            <input
+              type="password"
+              {...register('password')}
+              placeholder="Digite sua senha"
+            />
           </InputContainer>
 
-          <Button> Entrar </Button>
+          <Button type="submit"> Entrar </Button>
         </Form>
 
         <p>
