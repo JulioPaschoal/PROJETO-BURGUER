@@ -20,11 +20,11 @@ export default function Login() {
       email: yup
         .string()
         .email('Email ou senha inválidos')
-        .required('Campo obrigatório'),
+        .required('Campo e-mail é obrigatório'),
       password: yup
         .string()
         .min(6, 'A senha deve conter no mínimo 6 dígitos')
-        .required('Campo obrigatório'),
+        .required('Campo password é obrigatório'),
     })
     .required();
 
@@ -56,8 +56,8 @@ export default function Login() {
               {...register('email')}
               placeholder="Digite seu email"
             />
+            <p>{errors.email?.message}</p>
           </InputContainer>
-
           <InputContainer>
             <label>Senha</label>
             <input
@@ -65,11 +65,10 @@ export default function Login() {
               {...register('password')}
               placeholder="Digite sua senha"
             />
+            <p>{errors.password?.message}</p>
           </InputContainer>
-
           <Button type="submit"> Entrar </Button>
         </Form>
-
         <p>
           Não tem uma conta? <a>Clique aqui</a>
         </p>
