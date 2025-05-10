@@ -10,7 +10,7 @@ class SessionController {
     });
     const emailOrPasswordIncorrect = () => {
       return res
-        .status(400)
+        .status(401)
         .json({ error: 'Verifique se o e-mail e senha estão corretos' });
     };
     const isValid = await schema.isValid(req.body);
