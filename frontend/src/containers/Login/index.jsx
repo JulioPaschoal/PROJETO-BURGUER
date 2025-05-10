@@ -38,7 +38,7 @@ export default function Login() {
     resolver: yupResolver(schema),
   });
   const onSubmit = async (data) => {
-    const res = await toast.promise(
+    await toast.promise(
       api.post('/session', {
         email: data.email,
         password: data.password,
@@ -53,9 +53,7 @@ export default function Login() {
         position: 'top-right',
       },
     );
-    console.log(res);
   };
-
   return (
     <Container>
       <LeftContainer>
