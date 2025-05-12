@@ -43,22 +43,28 @@ export default function Register() {
     resolver: yupResolver(schema),
   });
   const onSubmit = async (data) => {
-    await toast.promise(
-      api.post('/users', {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      }),
-      {
-        pending: 'Aguarde...',
-        success: 'Cadastro realizado com sucesso!',
-        error: 'Ops, algo deu errado! Tente novamente.',
-      },
-      {
-        autoClose: 2000,
-        position: 'top-right',
-      },
-    );
+    try {
+      const { status } = await api.post(
+        '/users',
+        {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        },
+        {
+          validateStatus: () => true,
+        },
+      );
+      if (status === 200 || status === 201) {
+        toast.success('Cadastro realizado com sucesso!');
+      } else if (status === 409) {
+        toast.error('Email já cadastrado! Faça login para continuar.');
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      toast.error('Falha no Sistema! Tente novamente');
+    }
   };
   return (
     <Container>

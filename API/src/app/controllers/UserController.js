@@ -25,7 +25,7 @@ class UserController {
     const { name, email, password, admin } = req.body;
     const userExists = await User.findOne({ where: { email } });
     if (userExists) {
-      return res.status(400).json({ error: 'O usuário já existe no sistema!' });
+      return res.status(409).json({ error: 'O usuário já existe no sistema!' });
     }
     const user = await User.create({
       id: v4(),

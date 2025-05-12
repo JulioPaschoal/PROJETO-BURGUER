@@ -14,6 +14,7 @@ import {
   Title,
   Form,
   InputContainer,
+  Link,
 } from './styles';
 
 export default function Login() {
@@ -87,7 +88,7 @@ export default function Login() {
           <Button type="submit"> Entrar </Button>
         </Form>
         <p>
-          Não tem uma conta? <a>Clique aqui</a>
+          Não tem uma conta? <Link to="/register">Clique aqui</Link>
         </p>
       </RightContainer>
     </Container>
