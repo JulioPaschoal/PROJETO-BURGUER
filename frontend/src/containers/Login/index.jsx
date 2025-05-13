@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -18,6 +19,7 @@ import {
 } from './styles';
 
 export default function Login() {
+  const navigate = useNavigate();
   const schema = yup
     .object({
       email: yup
@@ -46,7 +48,14 @@ export default function Login() {
       }),
       {
         pending: 'Aguarde...',
-        success: 'Login realizado com sucesso!',
+        success: {
+          render() {
+            setTimeout(() => {
+              navigate('/');
+            }, 1000);
+            return 'Login realizado com sucesso';
+          },
+        },
         error: 'Email ou senha inválidos',
       },
       {
@@ -87,6 +96,7 @@ export default function Login() {
           </InputContainer>
           <Button type="submit"> Entrar </Button>
         </Form>
+
         <p>
           Não tem uma conta? <Link to="/register">Clique aqui</Link>
         </p>

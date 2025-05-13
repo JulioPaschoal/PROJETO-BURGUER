@@ -14,6 +14,7 @@ import {
   Title,
   Form,
   InputContainer,
+  Link,
 } from './styles';
 
 export default function Register() {
@@ -113,7 +114,7 @@ export default function Register() {
           <Button type="submit"> CONFIRMAR CADASTRO </Button>
         </Form>
         <p>
-          Já possui conta? <a>Clique aqui</a>
+          Já possui conta? <Link to="/login">Clique aqui</Link>
         </p>
       </RightContainer>
     </Container>

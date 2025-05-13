@@ -1,4 +1,4 @@
-import { Link as Link } from 'react-router-dom';
+import { Link as ReactLink } from 'react-router-dom';
 
 import styled from 'styled-components';
 
