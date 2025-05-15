@@ -1,41 +1,48 @@
 import * as Yup from 'yup';
-import { v4 } from 'uuid';
 import Product from '../models/Product';
 import Category from '../models/Category';
 import User from '../models/User';
 
 class ProductController {
-  async store(req, res) {
-    const schema = Yup.object().shape({
-      name: Yup.string().required('O nome é obrigatório!'),
-      price: Yup.number().required('O preco é obrigatório!'),
-      category_id: Yup.string().required('A categoria é obrigatória!'),
-      offer: Yup.boolean(),
-    });
+  async store(request, response) {
     try {
-      schema.validateSync(req.body, { abortEarly: false });
-    } catch (error) {
-      return res.status(400).json({ error: error.errors });
-    }
+      const schema = Yup.object().shape({
+        name: Yup.string().required(),
+        price: Yup.number().required(),
+        category_id: Yup.number().required(),
+        offer: Yup.boolean(),
+      });
 
-    const { admin: isAdmin } = await User.findByPk(req.userId);
-    if (!isAdmin) {
-      return res.status(401).json({ error: 'Acesso negado!' });
-    }
-    const { filename: path } = req.file;
-    const { name, price, category_id, offer } = req.body;
-    const product = await Product.create({
-      id: v4(),
-      name,
-      price,
-      category_id,
-      path,
-      offer,
-    });
+      try {
+        schema.validateSync(request.body, { abortEarly: false });
+      } catch (err) {
+        return response.status(400).json({ error: err.errors });
+      }
 
-    return res.status(201).json(product);
+      const { admin: isAdmin } = await User.findByPk(request.userId);
+
+      if (!isAdmin) {
+        return response.status(401).json();
+      }
+
+      const { filename: path } = request.file;
+      const { name, price, category_id, offer } = request.body;
+
+      const product = await Product.create({
+        name,
+        price,
+        category_id,
+        path,
+        offer,
+      });
+
+      return response.json(product);
+    } catch (err) {
+      console.log(err);
+    }
   }
-  async index(req, res) {
+
+  async index(request, response) {
     const products = await Product.findAll({
       include: [
         {
@@ -45,52 +52,63 @@ class ProductController {
         },
       ],
     });
-    return res.json(products);
+
+    return response.json(products);
   }
 
-  async update(req, res) {
-    const schema = Yup.object().shape({
-      name: Yup.string(),
-      price: Yup.number(),
-      category_id: Yup.string(),
-      offer: Yup.boolean(),
-    });
+  async update(request, response) {
     try {
-      schema.validateSync(req.body, { abortEarly: false });
-    } catch (error) {
-      return res.status(400).json({ error: error.errors });
-    }
+      const schema = Yup.object().shape({
+        name: Yup.string(),
+        price: Yup.number(),
+        category_id: Yup.number(),
+        offer: Yup.boolean(),
+      });
 
-    const { admin: isAdmin } = await User.findByPk(req.userId);
-    if (!isAdmin) {
-      return res.status(401).json({ error: 'Acesso negado!' });
-    }
-    const { id } = req.params;
-    const findProduct = await Product.findByPk(id);
-    if (!findProduct) {
-      return res.status(400).json({ error: 'Produto nao encontrado!' });
-    }
+      try {
+        schema.validateSync(request.body, { abortEarly: false });
+      } catch (err) {
+        return response.status(400).json({ error: err.errors });
+      }
 
-    let path;
-    if (req.file) {
-      path = req.file.filename;
-    }
-    const { name, price, category_id, offer } = req.body;
-    await Product.update(
-      {
-        id: v4(),
-        name,
-        price,
-        category_id,
-        path,
-        offer,
-      },
-      {
-        where: { id },
-      },
-    );
+      const { admin: isAdmin } = await User.findByPk(request.userId);
 
-    return res.status(200).json({ message: 'Produto atualizado com sucesso' });
+      if (!isAdmin) {
+        return response.status(401).json();
+      }
+
+      const { id } = request.params;
+
+      const product = await Product.findByPk(id);
+
+      if (!product) {
+        return response
+          .status(401)
+          .json({ error: 'Make sure your product ID is correct' });
+      }
+
+      let path;
+      if (request.file) {
+        path = request.file.filename;
+      }
+
+      const { name, price, category_id, offer } = request.body;
+
+      await Product.update(
+        {
+          name,
+          price,
+          category_id,
+          path,
+          offer,
+        },
+        { where: { id } },
+      );
+
+      return response.status(200).json();
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
 

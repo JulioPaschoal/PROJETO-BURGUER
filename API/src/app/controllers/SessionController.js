@@ -1,43 +1,47 @@
 import * as Yup from 'yup';
-import User from '../models/User';
 import jwt from 'jsonwebtoken';
+import authConfig from '../../config/auth';
+import User from '../models/User';
 
 class SessionController {
-  async store(req, res) {
+  async store(request, response) {
     const schema = Yup.object().shape({
       email: Yup.string().email().required(),
-      password: Yup.string().min(6).required('O campo senha é obrigatória!'),
+      password: Yup.string().required(),
     });
-    const emailOrPasswordIncorrect = () => {
-      return res
+
+    const userEmailOrPasswordIncorrect = () => {
+      return response
         .status(401)
-        .json({ error: 'Verifique se o e-mail e senha estão corretos' });
+        .json({ error: 'Make sure your password or email are correct' });
     };
-    const isValid = await schema.isValid(req.body);
-    if (!isValid) {
-      emailOrPasswordIncorrect();
+
+    if (!(await schema.isValid(request.body))) {
+      userEmailOrPasswordIncorrect();
     }
-    const { email, password } = req.body;
-    const user = await User.findOne({ where: { email } });
+
+    const { email, password } = request.body;
+
+    const user = await User.findOne({
+      where: { email },
+    });
+
     if (!user) {
-      emailOrPasswordIncorrect();
+      userEmailOrPasswordIncorrect();
     }
-    const isSamePassword = await user.comparePassword(password);
-    if (!isSamePassword) {
-      emailOrPasswordIncorrect();
+
+    if (!(await user.checkPassword(password))) {
+      userEmailOrPasswordIncorrect();
     }
-    return res.status(201).json({
+
+    return response.json({
       id: user.id,
-      name: user.name,
       email,
+      name: user.name,
       admin: user.admin,
-      token: jwt.sign(
-        { id: user.id, name: user.name },
-        process.env.APP_SECRET,
-        {
-          expiresIn: process.env.APP_EXPIRES,
-        },
-      ),
+      token: jwt.sign({ id: user.id, name: user.name }, authConfig.secret, {
+        expiresIn: authConfig.expiresIn,
+      }),
     });
   }
 }
