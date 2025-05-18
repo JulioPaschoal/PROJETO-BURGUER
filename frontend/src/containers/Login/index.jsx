@@ -41,8 +41,10 @@ export default function Login() {
     resolver: yupResolver(schema),
   });
   const onSubmit = async (data) => {
-    await toast.promise(
-      api.post('/session', {
+    const {
+      data: { token },
+    } = await toast.promise(
+      api.post('/sessions', {
         email: data.email,
         password: data.password,
       }),
@@ -63,6 +65,8 @@ export default function Login() {
         position: 'top-right',
       },
     );
+
+    localStorage.setItem('token', token);
   };
   return (
     <Container>
